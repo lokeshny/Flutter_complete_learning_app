@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynote_app/firebase_options.dart';
+import 'package:mynote_app/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -13,27 +16,30 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Homepage'),
-      ),
-      body: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.done:
-              final user = FirebaseAuth.instance.currentUser;
-              if(user?.emailVerified ?? false){
-                print('You are verified user');
-              }else{
-                print('User not verified');
-              }
-                return const Text('Done');
-            }
-            return const Text('Loading');
-          }),
-    );
+    return FutureBuilder(
+        future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+            //  final user = FirebaseAuth.instance.currentUser;
+            // log('$user');
+            //  if (user?.emailVerified ?? false) {
+            //     print('You are verified user');
+            //  } else {
+            //      return const VerifyEmailView();
+            //  Future.delayed(Duration.zero, () {
+            //     Navigator.of(context).push(MaterialPageRoute(builder: (builder)=>VerifyEmailView()));
+            //   Navigator.push(context, MaterialPageRoute(builder: (builder)=>VerifyEmailView()));
+            //    });
+            //
+            //   }
+              return  const LoginPage();
+          }
+          return const CircularProgressIndicator();
+        });
   }
 }
+
+
