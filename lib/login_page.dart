@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynote_app/register_screen.dart';
 import 'firebase_options.dart';
+import 'dart:developer';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -59,15 +60,17 @@ class _LoginPageState extends State<LoginPage> {
                 try {
                   final userCred = await FirebaseAuth.instance
                       .signInWithEmailAndPassword(
-                      email: email, password: password);
-                  print(userCred);
+                      email: email, password: password,);
+
+                  log(userCred.toString());
+                  Navigator.of(context).pushNamedAndRemoveUntil('/noteView/', (route) => false,);
                 } on FirebaseAuthException catch(e){
-                  print(e.code);
+                  log(e.code);
 
                   if(e.code == 'user-not-found'){
-                    print('User not found');
+                    log('User not found');
                   } else if(e.code == 'wrong-password'){
-                    print('Wrong password');
+                    log('Wrong password');
                   }
 
                 }
