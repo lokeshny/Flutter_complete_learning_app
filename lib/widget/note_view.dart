@@ -1,7 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-import '../enum_logout.dart';
+import 'package:flutter/material.dart';
+import 'package:mynote_app/constrouts/routs.dart';
+import 'package:mynote_app/services_auth/auth_service.dart';
+
+import '../enum/enum_logout.dart';
 import 'dart:developer' show log;
 
 class NoteView extends StatefulWidget {
@@ -25,8 +27,8 @@ class _NoteViewState extends State<NoteView> {
                 case MenuItems.logout:
                   final shouldlogout = await showDailogout(context);
                  if(shouldlogout){
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushNamedAndRemoveUntil('/login/',(_)=> false);
+                  await AuthService.firebase().logOut();
+                  Navigator.of(context).pushNamedAndRemoveUntil(loginRout,(_)=> false);
                  }
               }
             },
@@ -41,7 +43,7 @@ class _NoteViewState extends State<NoteView> {
           )
         ],
       ),
-      body: Text('Hello world'),
+      body: const Text('Hello world'),
     );
   }
 }

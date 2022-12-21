@@ -1,6 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
+import 'package:mynote_app/constrouts/routs.dart';
+import 'package:mynote_app/services_auth/auth_exception.dart';
+import 'package:mynote_app/services_auth/auth_service.dart';
+import 'package:mynote_app/utilities/show_error_dialog.dart';
+import 'dart:developer';
 
 import 'firebase_options.dart';
 
@@ -35,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('RegisterView'),
+        title: const Text('RegisterView'),
       ),
       body: Column(
         children: [
@@ -56,27 +60,24 @@ class _RegisterPageState extends State<RegisterPage> {
                 final email = _email.text;
                 final password = _password.text;
                 try {
-                  final userCred = await FirebaseAuth.instance
-                      .createUserWithEmailAndPassword(
-                      email: email, password: password);
-                } on FirebaseAuthException catch(e){
-                  print(e.code);
-                  if(e.code == 'weak-password'){
-                    print('password is weak');
-                  } else if(e.code == 'email-already-in-use'){
-                    print('Wrong password');
-                  }
-
+                  AuthService.firebase().createUser(email: email, password: password);
+                  Navigator.of(context).pushNamed(verifyEmailRout, );
+                } on EmailAlreadyInUseException {
+                  await showErrorDialog(context, 'Email exist');
+                } on WeakPassWordException {
+                  await showErrorDialog(context, 'weak password');
+                } on InvalidEmailIdException {
+                  await showErrorDialog(context, 'Invalid email id');
+                }
+                on GenericAuthException {
+                  await showErrorDialog(context, 'Authentication error');
                 }
               },
-              child: Text('Register')),
+              child: const Text('Register')),
           TextButton(
-
-               onPressed:() => Navigator.of(context).pushNamedAndRemoveUntil('/login/', (route) => false),
-
-              child: Text('Already Registerd ? Login')),
-
-
+              onPressed: () => Navigator.of(context)
+                  .pushNamedAndRemoveUntil(loginRout, (route) => false),
+              child: const Text('Already Registered ? Login')),
         ],
       ),
     );

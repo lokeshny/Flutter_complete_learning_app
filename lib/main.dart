@@ -1,6 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynote_app/constrouts/routs.dart';
 import 'package:mynote_app/register_screen.dart';
+import 'package:mynote_app/verify_email.dart';
 import 'package:mynote_app/widget/note_view.dart';
 
 import 'home_screen.dart';
@@ -14,11 +15,12 @@ void main() {
 
       primarySwatch: Colors.blue,
     ),
-    home:  HomePage(),
+    home:   HomePage(),
     routes: {
-      '/login/':(context) => const LoginPage(),
-      '/register/':(context) => const RegisterPage(),
-      '/noteView/':(context) => const NoteView(),
+      loginRout:(context) => const LoginPage(),
+      registerRout:(context) => const RegisterPage(),
+      noteViewRout:(context) => const NoteView(),
+      verifyEmailRout:(context) => const VerifyEmailView(),
     },
   ));
 }
