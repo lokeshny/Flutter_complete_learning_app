@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mynote_app/constrouts/routs.dart';
-import 'package:mynote_app/services_auth/auth_service.dart';
+import 'package:mynote_app/services_auth/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({Key? key}) : super(key: key);

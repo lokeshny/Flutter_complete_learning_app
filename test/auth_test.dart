@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mynote_app/services_auth/auth_exception.dart';
-import 'package:mynote_app/services_auth/auth_provider.dart';
-import 'package:mynote_app/services_auth/auth_user.dart';
+import 'package:mynote_app/services_auth/auth/auth_exception.dart';
+import 'package:mynote_app/services_auth/auth/auth_provider.dart';
+import 'package:mynote_app/services_auth/auth/auth_user.dart';
 
 
 void main(){

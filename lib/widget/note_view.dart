@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mynote_app/constrouts/routs.dart';
-import 'package:mynote_app/services_auth/auth_service.dart';
+import 'package:mynote_app/services_auth/auth/auth_service.dart';
 
 import '../enum/enum_logout.dart';
 import 'dart:developer' show log;
