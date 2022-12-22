@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mynote_app/firebase_options.dart';
 import 'package:mynote_app/login_page.dart';
 import 'package:mynote_app/verify_email.dart';
-import 'package:mynote_app/widget/note_view.dart';
+import 'package:mynote_app/note_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

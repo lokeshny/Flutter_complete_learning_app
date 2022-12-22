@@ -65,11 +65,12 @@ class _LoginPageState extends State<LoginPage> {
                       .firebase()
                       .currentUser;
 
-                  if (user?.isEmailVerified ?? false) {
-                    Navigator.of(context).pushNamed(noteViewRout,);
+
+                  if (user?.isEmailVerified ?? true) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(noteViewRout, (_) => false);
                   }
                   else {
-                    Navigator.of(context).pushNamed(verifyEmailRout,);
+                    Navigator.of(context).pushNamedAndRemoveUntil(verifyEmailRout, (_) => false);
                   }
                 } on UserNotFoundAuthException {
                   await showErrorDialog(context, 'user not found');
