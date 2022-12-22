@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mynote_app/constrouts/routs.dart';
 import 'package:mynote_app/services_auth/auth/auth_exception.dart';
 import 'package:mynote_app/services_auth/auth/auth_service.dart';
-import 'package:mynote_app/utilities/show_error_dialog.dart';
+import 'package:mynote_app/utilities/error_dialog.dart';
 import 'dart:developer';
 
 class LoginPage extends StatefulWidget {
