@@ -5,14 +5,14 @@ import 'package:mynote_app/services_auth/auth/auth_service.dart';
 import 'package:mynote_app/utilities/error_dialog.dart';
 import 'dart:developer';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginViewState extends State<LoginView> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                   await showErrorDialog(context, 'Auhtentication error');
                 }
               },
-              child: Text('Login')),
+              child: const Text('Login')),
           TextButton(
               onPressed: () =>
                   Navigator.of(context).pushNamedAndRemoveUntil(

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mynote_app/services_auth/auth/auth_service.dart';
-import 'package:mynote_app/services_auth/crud/note_service.dart';
+import 'package:mynote_app/services_auth/cloud/cloud_note.dart';
+import 'package:mynote_app/services_auth/cloud/firebase_cloud_storage.dart';
+import 'package:mynote_app/utilities/get_arguments.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../utilities/cannot_share_empty_dialog.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({Key? key}) : super(key: key);
@@ -10,13 +15,13 @@ class CreateUpdateNoteView extends StatefulWidget {
 }
 
 class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
-  DatabaseNotes? _note;
-  late final NoteService _noteService;
+  CloudNote? _note;
+  late final FirebaseCloudStorage _noteService;
   late final TextEditingController _textController;
 
   @override
   void initState() {
-    _noteService = NoteService();
+    _noteService = FirebaseCloudStorage();
     _textController = TextEditingController();
     super.initState();
   }
@@ -27,7 +32,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
       return;
     }
     final text = _textController.text;
-    await _noteService.updateNote(note: note, text: text);
+    await _noteService.updateNote(documentId: note.documentId,text: text);
   }
 
   void _setupTextControllerListener(){
@@ -37,23 +42,29 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
 
 
 
-  Future<DatabaseNotes> createNewNote() async{
+
+  Future<CloudNote> createOrGetExistingNote(BuildContext context) async{
+    final widgetNote = context.getArgument<CloudNote>();
+    if(widgetNote != null){
+      _note = widgetNote;
+      _textController.text = widgetNote.text;
+      return widgetNote;
+    }
     final existingNote = _note;
     if(existingNote != null){
       return existingNote;
     }
     final currentUser = AuthService.firebase().currentUser!;
-    final email = currentUser.email!;
-    final owner = await _noteService.getUser(email: email);
-    print(owner.email);
-    print(owner.id);
-    return await _noteService.createNote(owner: owner);
+    final userId = currentUser.id;
+    final newNote =   await _noteService.createNewNote(ownerUserId: userId);
+    _note = newNote;
+    return newNote;
   }
 
   void _deleteNoteIfEmpty(){
     final note = _note;
     if(_textController.text.isEmpty && note != null){
-      _noteService.deleteNote(id: note.id);
+      _noteService.deleteNote( documentId: note.documentId);
     }
   }
 
@@ -61,7 +72,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     final note = _note;
     final text = _textController.text;
     if( text.isNotEmpty && note != null){
-      _noteService.updateNote(text: text, note: note,);
+      _noteService.updateNote(text: text,documentId: note.documentId);
     }
   }
 
@@ -79,15 +90,24 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Note'),
+        actions: [
+          IconButton(onPressed: () async {
+            final text = _textController.text;
+            if(_note == null  || text.isEmpty){
+              await showCannotShareEmptyNotDialog(context);
+            } else{
+              Share.share(text);
+            }
+
+          }, icon: Icon(Icons.share))
+        ],
+        title: const Text('New Note'),
       ),
       body: FutureBuilder(
-        future: createNewNote(),
+        future: createOrGetExistingNote(context),
         builder: (context, snapshot){
           switch(snapshot.connectionState){
             case ConnectionState.done:
-              print(snapshot.data);
-              _note = snapshot.data as DatabaseNotes;
               _setupTextControllerListener();
               return TextField(
                 controller: _textController,
@@ -97,7 +117,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
                     hintText: "'Start typing your note ..."
                 ),
               );
-              break;
+
             default:
               return const CircularProgressIndicator();
           }
